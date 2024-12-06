@@ -68,5 +68,10 @@ class RandomReviewers:
                 return 1 #Reviewer owns 3 or more equipment
             case _:
                 return 2 #Reviewer owns 1 or 2 equipment.
+            
+    def remove_group_equipment(self)->pd.DataFrame:
+        ...
+    
+    
 
         
