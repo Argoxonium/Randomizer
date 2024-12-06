@@ -15,6 +15,7 @@ class RandomReviewers:
     def choose_reviewer(self, employees: list = None, exclusions: list = None) -> str:
         """
         Randomly selects a reviewer from a list of employees, excluding specified individuals.
+        This wont add reviewer to the exclusion list as this should be confirmed first.
 
         Args:
             employees (list): A list of employee names.

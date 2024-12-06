@@ -17,7 +17,7 @@ randomizer = RandomReviewers(equipment=equipment_df, groups=groups_df)
 
 # Populate the class's employee list and exclusion list
 randomizer.employee_list = ["Alice", "Bob", "Charlie", "Diana", "Eve"]
-randomizer.exclusion_list = ["Alice", "Diana"]
+randomizer.exclusion_list = ["Alice"]
 
 # Use the choose_reviewer function
 try:
