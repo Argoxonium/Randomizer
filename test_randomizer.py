@@ -25,3 +25,15 @@ try:
     print(f"Selected Reviewer: {selected_reviewer}")
 except ValueError as e:
     print(f"Error: {e}")
+
+### Test 2 ###
+# Example owners list
+owners_list = ["Alice", "Bob", "Alice", "Alice", "Charlie"]
+
+# Class attribute
+randomizer.owners_list = owners_list
+
+# Determine review numbers
+print(randomizer.determine_review_number("Alice"))  # Output: 1 (owns 3+ equipment)
+print(randomizer.determine_review_number("Bob"))    # Output: 2 (owns 1 equipment)
+print(randomizer.determine_review_number("Eve"))    # Output: 3 (owns 0 equipment)

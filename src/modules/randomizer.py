@@ -9,6 +9,7 @@ class RandomReviewers:
     def __init__(self, equipment: pd.DataFrame, groups: pd.DataFrame) -> None:
         self.employee_list: list = []
         self.exclusion_list: list = []
+        self.owners_list: list = []
         self.groups: pd.DataFrame = groups
         self.equipment: pd.DataFrame = equipment
 
@@ -45,3 +46,27 @@ class RandomReviewers:
         reviewer = random.choice(eligible_employees)
 
         return reviewer
+    
+    def determine_review_number(self, reviewer:str, owners:list = None)->int:
+        """
+        Determines the maximum number of reviews a reviewer should handle based on ownership.
+
+        Args:
+            reviewer (str): The name of the reviewer.
+            owners (list): A list of equipment owners. Defaults to self.owners_list if not provided.
+
+        Returns:
+            int: The maximum number of reviews the reviewer should handle.
+        """
+        #Use class attribute is none was provided for use outside of class.
+        owners: list = owners if owners is not None else self.owners_list
+        equipment_owned = owners.count(reviewer)
+        match equipment_owned:
+            case 0:
+                return 3 #Reviewer owns no equipment
+            case count if count>=3:
+                return 1 #Reviewer owns 3 or more equipment
+            case _:
+                return 2 #Reviewer owns 1 or 2 equipment.
+
+        
