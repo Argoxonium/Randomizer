@@ -98,24 +98,29 @@ class RandomReviewers:
 
         return filtered_equipment
 
-    def choose_equipment(self, equipment_df: pd.DataFrame) -> str:
+
+    def choose_equipment(self, equipment_df: pd.DataFrame) -> dict:
         """
-        Randomly selects a piece of equipment for a reviewer to review.
+        Randomly selects a piece of equipment for a reviewer to review and returns the entire row as a dictionary.
 
         Args:
             equipment_df (pd.DataFrame): The filtered DataFrame of available equipment.
 
         Returns:
-            str: The ID of the selected equipment.
+            dict: A dictionary containing the details of the selected equipment.
         """
         # Validate the input DataFrame
         if equipment_df.empty:
             raise ValueError("No equipment available for selection.")
 
         # Randomly select a piece of equipment
-        selected_equipment = equipment_df.sample(n=1).iloc[0]['Equipment']
+        selected_row = equipment_df.sample(n=1).iloc[0]
+
+        # Convert the selected row to a dictionary
+        selected_equipment = selected_row.to_dict()
 
         return selected_equipment
+
 
     
 
