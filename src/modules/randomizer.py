@@ -58,20 +58,50 @@ class RandomReviewers:
         Returns:
             int: The maximum number of reviews the reviewer should handle.
         """
+        #TODO count alternates when active.
         #Use class attribute is none was provided for use outside of class.
         owners: list = owners if owners is not None else self.owners_list
         equipment_owned = owners.count(reviewer)
         match equipment_owned:
             case 0:
                 return 3 #Reviewer owns no equipment
-            case count if count>=3:
-                return 1 #Reviewer owns 3 or more equipment
+            case count if count>3:
+                return 0 #Reviewer owns more than three equipment they are exempt from the process.
+            case 3:
+                return 1
             case _:
                 return 2 #Reviewer owns 1 or 2 equipment.
             
-    def remove_group_equipment(self)->pd.DataFrame:
+    def remove_group_equipment(self, reviewer: str) -> pd.DataFrame:
+        """
+        Removes all equipment owned by members of the reviewer's group from the equipment list.
+
+        Args:
+            reviewer (str): The name of the selected reviewer.
+
+        Returns:
+            pd.DataFrame: A filtered DataFrame of equipment excluding items owned by the reviewer's group.
+        """
+        # Identify the group the reviewer belongs to
+        reviewer_group = self.groups.loc[self.groups['Name'] == reviewer, 'Group'].values
+
+        if len(reviewer_group) == 0:
+            raise ValueError(f"Reviewer {reviewer} does not belong to any group.")
+
+        reviewer_group = reviewer_group[0]
+
+        # Get the list of group members
+        group_members = self.groups[self.groups['Group'] == reviewer_group]['Name'].tolist()
+
+        # Remove equipment owned by group members
+        filtered_equipment = self.equipment[~self.equipment['Owner'].isin(group_members)]
+
+        return filtered_equipment
+
+
+    def choose_equipment(self)->str:
         ...
     
-    
+
 
         
