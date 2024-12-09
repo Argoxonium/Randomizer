@@ -37,3 +37,26 @@ randomizer.owners_list = owners_list
 print(randomizer.determine_review_number("Alice"))  # Output: 1 (owns 3+ equipment)
 print(randomizer.determine_review_number("Bob"))    # Output: 2 (owns 1 equipment)
 print(randomizer.determine_review_number("Eve"))    # Output: 3 (owns 0 equipment)
+
+## TEST 3
+# Example data
+equipment_df = pd.DataFrame({
+    "Equipment": ["E1", "E2", "E3", "E4"],
+    "Owner": ["Alice", "Bob", "Charlie", "Diana"]
+})
+
+groups_df = pd.DataFrame({
+    "Name": ["Alice", "Bob", "Charlie", "Diana", "Eve"],
+    "Group": ["Group1", "Group1", "Group2", "Group2", "Group3"]
+})
+
+# Instantiate the RandomReviewers class
+randomizer = RandomReviewers(equipment=equipment_df, groups=groups_df)
+
+# Selected reviewer
+selected_reviewer = "Bob"
+
+# Remove equipment owned by members of the selected reviewer's group
+filtered_equipment = randomizer.remove_group_equipment(selected_reviewer)
+
+print(filtered_equipment)
