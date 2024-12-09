@@ -4,7 +4,9 @@ import os
 def main():
     #get file path and make sure files exist.
     employee_file_path = os.path.expanduser(config.get('File Paths','employee_list'))
-    os.makedirs(employee_file_path,exist_ok=True)
+    if not os.path.exists(employee_file_path):
+        print(f"File not found: {employee_file_path}")
+
 
     equipment_file_path = os.path.expanduser(config.get('File Paths','equipment_list'))
     os.makedirs(equipment_file_path,exist_ok=True)

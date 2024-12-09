@@ -1,10 +1,6 @@
 import random
 import pandas as pd
 
-
-import random
-import pandas as pd
-
 class RandomReviewers:
     def __init__(self, equipment: pd.DataFrame, groups: pd.DataFrame) -> None:
         self.employee_list: list = []

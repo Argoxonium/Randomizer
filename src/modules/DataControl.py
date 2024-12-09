@@ -1,5 +1,5 @@
 import pandas as pd
-from randomizer import RandomReviewers
+from .randomizer import RandomReviewers
 
 def load_data(employee_file, equipment_file) -> pd.DataFrame:
     # Load employee and equipment data
