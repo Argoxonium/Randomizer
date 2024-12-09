@@ -60,3 +60,17 @@ selected_reviewer = "Bob"
 filtered_equipment = randomizer.remove_group_equipment(selected_reviewer)
 
 print(filtered_equipment)
+
+## Test 4
+# Example data
+filtered_equipment = pd.DataFrame({
+    "Equipment": ["E3", "E4"],
+    "Owner": ["Charlie", "Diana"]
+})
+
+# Select a piece of equipment
+try:
+    selected_equipment = randomizer.choose_equipment(filtered_equipment)
+    print(f"Selected Equipment: {selected_equipment}")
+except ValueError as e:
+    print(f"Error: {e}")

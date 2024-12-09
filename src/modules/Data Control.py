@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def load_data(self, employee_file, equipment_file):
     # Load employee and equipment data
     employees = pd.read_csv(employee_file)
