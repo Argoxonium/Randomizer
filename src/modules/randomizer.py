@@ -72,7 +72,7 @@ class RandomReviewers:
             case _:
                 return 2 #Reviewer owns 1 or 2 equipment.
             
-    def remove_group_equipment(self, reviewer: str) -> pd.DataFrame:
+    def remove_group_equipment(self, reviewer: str, equipment: pd.DataFrame = None) -> pd.DataFrame:
         """
         Removes all equipment owned by members of the reviewer's group from the equipment list.
 
@@ -82,6 +82,9 @@ class RandomReviewers:
         Returns:
             pd.DataFrame: A filtered DataFrame of equipment excluding items owned by the reviewer's group.
         """
+        #See what list to use.
+        equipment = equipment if equipment is not None else self.equipment
+
         # Identify the group the reviewer belongs to
         reviewer_group = self.groups.loc[self.groups['Name'] == reviewer, 'Group'].values
 
@@ -94,7 +97,7 @@ class RandomReviewers:
         group_members = self.groups[self.groups['Group'] == reviewer_group]['Name'].tolist()
 
         # Remove equipment owned by group members
-        filtered_equipment = self.equipment[~self.equipment['Owner'].isin(group_members)]
+        filtered_equipment = equipment[~equipment['Owner'].isin(group_members)]
 
         return filtered_equipment
 
