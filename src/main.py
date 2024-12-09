@@ -32,20 +32,46 @@ def run_random_event(equipment: pd.DataFrame, personnel: pd.DataFrame)->pd.DataF
             i += j        
 
             #Determine Equipment
-            equipment = random_event.choose_equipment(avalible_equipment, assignments)
+            equipment:dict = random_event.choose_equipment(avalible_equipment, assignments)
 
             #create a dict in correct order and add the assigned equipment to dataframe
-            assignment: dict = {'Location': 0, 'Room': 0, 'Equipment':equipment, 'Owner':0, 'Reviewer':reviewer}   
+            assignment: dict = {
+                'Location': equipment["Location"], 
+                'Room': equipment["Room"], 
+                'Equipment':equipment["Eqipment ID"], 
+                'Owner':equipment["Owner"], 
+                'Reviewer':reviewer
+                }   
             assignments.append(assignment, ignore_index=True)
 
-            #Remove equipment that has been assigned
-            avalible_equipment = remove_assigned_equipment(equipment,assignments)
+            # Append to the assignments DataFrame
+            assignments = pd.concat([assignments, pd.DataFrame([assignment])], ignore_index=True)
 
     
+def remove_assigned_equipment(equipment: pd.DataFrame, assignments: pd.DataFrame) -> pd.DataFrame:
+    """
+    Removes equipment already assigned from the available equipment DataFrame.
 
-def remove_assigned_equipment(equipment: pd.DataFrame, assigned: pd.DataFrame):
-    #TODO Create function
-    return equipment
+    Args:
+        equipment (pd.DataFrame): The DataFrame containing all available equipment.
+        assignments (pd.DataFrame): The DataFrame containing assigned equipment.
+
+    Returns:
+        pd.DataFrame: A filtered DataFrame with unassigned equipment.
+    """
+    # Merge assignments to filter out rows
+    filtered_equipment = equipment.merge(
+        assignments[['Location', 'Room', 'Equipment', 'Owner']],
+        on=['Location', 'Room', 'Equipment', 'Owner'],
+        how='left',
+        indicator=True
+    )
+
+    # Keep only rows not in the assignments DataFrame
+    unassigned_equipment = filtered_equipment[filtered_equipment['_merge'] == 'left_only'].drop(columns=['_merge'])
+
+    return unassigned_equipment
+
 
 def create_export_df()->pd.DataFrame:
     """
