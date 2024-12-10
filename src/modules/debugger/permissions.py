@@ -9,7 +9,7 @@ def check_permissions(file_path):
     >>> file_path = "C:/Users/nhorn/Documents/Lab Inspections/Glovebox and hood inspection documents/Program/config.ini"
     >>> check_permissions(file_path)
     """
-    print(f"Checking permissions for: {file_path}")
+    print(f"🔍 Checking permissions for: {file_path}")
     
     if not os.path.isfile(file_path):
         print("❌ File does not exist.")
