@@ -22,6 +22,9 @@ class ConfigManager(metaclass=Singleton):
         self.config_path = config_path
         self.config.read(config_path)
 
+    def __str__(self):
+        return f"ConfigManager loaded from: {self.config_path}"
+
     def get(self, section: str, option: str):
         try:
             return self.config.get(section, option)
@@ -49,11 +52,11 @@ def check_redirect() -> str:
     redirect_file = os.path.join(current_folder, "_redirect.ini")
     
     # Check if config.ini exists in the current directory
-    if os.path.isfile(config_file):
+    if check_path(config_file):
         return config_file
     
     # If config.ini is not found, check for _redirect.ini
-    elif os.path.isfile(redirect_file):
+    elif check_path(redirect_file):
         
         # Load the redirect file
         parser = configparser.ConfigParser()
@@ -63,11 +66,21 @@ def check_redirect() -> str:
         if parser.has_section("Redirect") and parser.has_option("Redirect", "config_location"):
             redirect_path = parser.get("Redirect", "config_location")
             # Expand user if the path has ~ and return the absolute path
-            redirect_path = os.path.expanduser(redirect_path)
+
+            if not check_path(redirect_path):
+                redirect_path = os.path.expanduser(redirect_path)
+                return redirect_path
+            
             return redirect_path
+        
         else:
             return None
     
     else:
-        return None
+        raise FileExistsError("there is no redirect or config file within the configure module folder.")
+
+def check_path(path: str) -> bool:
+    """Check if the path exists"""
+    return os.path.isfile(path)
+        
 
