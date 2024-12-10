@@ -1,11 +1,30 @@
 import pandas as pd
 from .randomizer import RandomReviewers
+import chardet
 
-def load_data(employee_file, equipment_file) -> pd.DataFrame:
-    # Load employee and equipment data
-    employees = pd.read_csv(employee_file)
-    equipment = pd.read_csv(equipment_file)
-    return employees, equipment
+def detect_encoding(file_path):
+    #using for csv files
+    with open(file_path, "rb") as f:
+        result = chardet.detect(f.read())
+        return result["encoding"]
+
+def load_data(employee_file, equipment_file):
+    #determine the decoding of the excel file for csv file
+    #employee_encoding = detect_encoding(employee_file)
+    #equipment_encoding = detect_encoding(equipment_file)
+
+    try:
+        # Try loading the files with correct encoding
+        employees = pd.read_excel(equipment_file)
+        equipment = pd.read_excel(equipment_file)
+
+        print("✅ Files loaded successfully!")
+        return employees, equipment
+
+    except UnicodeDecodeError as e:
+        print(f"❌ Encoding Error: {e}")
+        raise
+
 
 def export_to_excel(assignments, output_file) -> None:
     # Export assignments to Excel
