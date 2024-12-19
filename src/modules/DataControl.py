@@ -25,10 +25,14 @@ def load_data(employee_file, equipment_file):
         print(f"❌ Encoding Error: {e}")
         raise
 
-
 def export_to_excel(assignments, output_file) -> None:
     # Export assignments to Excel
-    assignments.to_excel(output_file, index=False)
+    try:
+        assignments.to_excel(output_file, index=False)
+        print("✅ Files Saved successfully!")
+    except:
+        print('⚠️ Unable to save information. 🛑 Prosess cancled')
+        raise
 
 def run_random_event(equipment: pd.DataFrame, personnel: pd.DataFrame, personnel_exclusion: list = [])->pd.DataFrame:
     assignments: pd.DataFrame = create_export_df() #Create an empty dataframe

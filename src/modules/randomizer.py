@@ -61,7 +61,7 @@ class RandomReviewers:
         match equipment_owned:
             case 0:
                 return 3 #Reviewer owns no equipment
-            case count if count>3:
+            case count if count > 3:
                 return 0 #Reviewer owns more than three equipment they are exempt from the process.
             case 3:
                 return 1
@@ -119,6 +119,54 @@ class RandomReviewers:
         selected_equipment = selected_row.to_dict()
 
         return selected_equipment
+    
+    def room_check(self, reviewer: str, review_number: int, owner: str, room: str, equipment_df: pd.DataFrame = None) -> pd.DataFrame:
+        """
+        Compare the number of reviews assigned to a reviewer with the number of equipment items owned by the owner. 
+        If the review number is greater than or equal to the number of equipment items, 
+        the reviewer will be assigned to inspect the equipment. Otherwise, a new reviewer will be reassigned.
+
+        Args:
+            reviewer (str): The assigned reviewer.
+            review_number (int): The maximum number of reviews the reviewer can perform.
+            owner (str): The owner of the equipment being reviewed.
+            room (str): The room where the equipment is located.
+            equipment_df (pd.DataFrame, optional): A DataFrame containing the list of equipment. Defaults to None.
+
+        Returns:
+            pd.DataFrame: An updated DataFrame containing the list of equipment assignments for the reviewer.
+        """
+        ##-- Validate Input --##
+        equipment_df = equipment_df if equipment_df is not None else self.equipment
+        
+        if equipment_df is None or equipment_df.empty:
+            raise ValueError("The equipment DataFrame is empty or not provided.")
+
+        ##-- Determine How Many Pieces of Equipment the Owner Has in the Room --##
+        owner_equipment = equipment_df[
+            (equipment_df['Owner'] == owner) & (equipment_df['Room'] == room)
+        ]
+        equipment_count = len(owner_equipment)
+
+        ##-- Compare Equipment Count to Review Number --##
+        if equipment_count == 0:
+            print(f"⚠️ Owner {owner} count error in {room}. Owner has 0 equipment assigned to {room}")
+            raise ValueError('🛑 Owner doesnt have eqipment in this room. FULL STOP')
+        
+        if review_number >= equipment_count and equipment_count > 0:
+            # Assign the reviewer to the owner's equipment in the specific room
+            assignments = owner_equipment.copy()
+            assignments['Reviewer'] = reviewer
+            print(f"✅ Reviewer {reviewer} assigned to {equipment_count} equipment items in {room}.")
+
+        else:
+            # Handle the case where a new reviewer needs to be reassigned
+            print(f"⚠️ Reviewer {reviewer} cannot be assigned. Reassignment required.")
+            assignments = pd.DataFrame()  # Placeholder for reassignment logic
+
+        ##-- Return Updated DataFrame --##
+        return assignments
+
 
 
     
